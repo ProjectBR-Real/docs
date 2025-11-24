@@ -1,6 +1,6 @@
 # Buckshot Roulette System Documentation
 
-計画についてはこちらをご覧ください。
+企画についてはこちらをご覧ください。
 
 https://docs.google.com/document/d/10nxpSHk5lyHqWwNuDh7gPnl_4ZbK7xqgBRiF-XYg-T8/edit
 
@@ -71,5 +71,5 @@ graph TB
 
 ## 開発資料
 
-- [企画書](./planning.md): プロジェクトの全体計画と要件。
+- [企画書](https://docs.google.com/document/d/10nxpSHk5lyHqWwNuDh7gPnl_4ZbK7xqgBRiF-XYg-T8/edit): プロジェクトの全体計画と要件。Googleアカウントが必要です。
 - [技術メモ](./tech.md): 初期の技術選定メモ。
