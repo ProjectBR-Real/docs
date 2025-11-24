@@ -1,35 +1,53 @@
 # ショットガンシステムの技術スタック
 
 ```mermaid
-graph TB
-    subgraph "メインシステム"
-        MainPC("メインPC<br>(Windows)")
-        MainPC -- Wi-Fi (ゲートウェイ経由) --> ESP32("ESP32<br>(PlatformIO/C++)")
-        MainPC -- Wi-Fi (WebSocket) --> TabletPWA("タブレット<br>(PWA/React)")
-        MainPC -- HTTPS/API連携 --> FirebaseDB("Firebase Firestore<br>(データベース)")
+flowchart TB
+    %% スタイル定義
+    classDef default fill:#f9f9f9,stroke:#333,stroke-width:1px;
+    classDef master fill:#e6f2ff,stroke:#0066cc,stroke-width:2px;
+    classDef client fill:#e6ffe6,stroke:#00cc66,stroke-width:2px;
+    classDef shotgun fill:#ffe6ff,stroke:#cc00cc,stroke-width:2px;
+    classDef table fill:#fffacc,stroke:#ffcc00,stroke-width:2px;
+    classDef web fill:#f0f0f0,stroke:#666,stroke-width:2px;
+
+    subgraph MainSystem ["メインシステム"]
+        direction TB
+        Master["Master PC<br>(Python/FastAPI)"]:::master
+        WebUI("WebUI<br>(JavaScript)"):::master
+        Master -- API --> WebUI
     end
 
-    subgraph "ショットガン"
-        ESP32 --> MPU9250("9軸センサー")
-        ESP32 --> MFRC522("RFIDリーダー")
-        ESP32 --> Motor("振動モーター")
-        ESP32 --> Speaker("スピーカー")
-        ESP32 --> Switch("マイクロスイッチ")
+    subgraph Web ["ウェブ連携"]
+        direction TB
+        FirebaseDB("Firebase Firestore<br>(データベース)"):::web
+        Website("プロジェクトサイト<br>(Astro)"):::web
+        Master -- HTTPS/API --> FirebaseDB
+        Website -->|HTTPS/API| FirebaseDB
     end
 
-    subgraph "ウェブサイト"
-        Website("ウェブサイト<br>(Astro)")
-        Website -->|HTTPS/API連携| FirebaseDB
+    subgraph ShotgunSystem ["ショットガン (br-shotgun)"]
+        direction TB
+        Shotgun["Shotgun<br>(ESP32)"]:::shotgun
+        Motor["振動モーター"]:::shotgun
+        Speaker["スピーカー"]:::shotgun
+        Switch["マイクロスイッチ"]:::shotgun
+        
+        Shotgun --> Motor
+        Shotgun --> Speaker
+        Shotgun --> Switch
     end
 
-    subgraph "LEDライフ表示"
-        TabletPWA -- USBシリアル --> ArduinoNano("Arduino Nano<br>(LED表示)")
+    subgraph ClientSystem ["クライアント & テーブル"]
+        direction TB
+        Client["Client Tablet<br>(React/Vite)"]:::client
+        Table["Table<br>(Arduino/ESP32)"]:::table
+        RFID["RFIDリーダー<br>(MFRC522)"]:::table
+        
+        Client -- "USB Serial" --> Table
+        Table --> RFID
     end
 
-    style MainPC fill:#e6f2ff,stroke:#333,stroke-width:2px,color:#000
-    style ESP32 fill:#ffe6ff,stroke:#333,stroke-width:2px,color:#000
-    style TabletPWA fill:#e6ffe6,stroke:#333,stroke-width:2px,color:#000
-    style Website fill:#f0f0ff,stroke:#333,stroke-width:2px,color:#000
-    style FirebaseDB fill:#fffacc,stroke:#333,stroke-width:2px,color:#000
-    style ArduinoNano fill:#ffccdd,stroke:#333,stroke-width:2px,color:#000
+    %% システム間通信
+    Master -- "TCP Socket" --> Shotgun
+    Master -- "HTTP Polling" --> Client
 ```
