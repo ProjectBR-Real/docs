@@ -16,25 +16,25 @@ https://docs.google.com/document/d/10nxpSHk5lyHqWwNuDh7gPnl_4ZbK7xqgBRiF-XYg-T8/
 ```mermaid
 graph TB
     subgraph "Game Master (PC)"
-        Master[br-master<br>(Python/FastAPI)]
+        Master["br-master<br>(Python/FastAPI)"]
         DB[(In-Memory Game State)]
         Master --> DB
     end
 
     subgraph "Player Interface"
-        Client[br-client<br>(React/Vite)]
+        Client["br-client<br>(React/Vite)"]
         Client -- HTTP Polling --> Master
     end
 
     subgraph "Hardware"
-        Shotgun[br-shotgun<br>(ESP32)]
+        Shotgun["br-shotgun<br>(ESP32)"]
         Shotgun -- TCP Socket --> Master
-        Table[br-table<br>(Arduino/ESP32)]
+        Table["br-table<br>(Arduino/ESP32)"]
         Table -- TCP/Serial --> Master
     end
 
     subgraph "Props"
-        Items[RFID Tags]
+        Items["RFID Tags"]
         Table -.->|Read| Items
     end
 ```
